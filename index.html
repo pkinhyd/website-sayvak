@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sayvak — Career Growth for IT & Security Professionals</title>
+<meta name="description" content="Sayvak builds resumes and career routes for Support, Network, Security, Cyber Security and Information Security professionals.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0F14;
+    --panel: #121821;
+    --panel-2: #0F141B;
+    --line: #1E2833;
+    --text: #E8ECF1;
+    --muted: #8A97A6;
+    --amber: #FFB454;
+    --cyan: #4FD1C5;
+    --danger: #FF6B6B;
+    --radius: 10px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  h1,h2,h3{font-family:'Space Grotesk', sans-serif; font-weight:600; letter-spacing:-0.01em;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){ .wrap{padding:0 20px;} }
+
+  /* background grid texture */
+  .grid-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:56px 56px;
+    opacity:0.35;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+  }
+
+  /* NAV */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,15,20,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{display:flex; align-items:center; justify-content:space-between; padding:18px 0;}
+  .logo{display:flex; align-items:center; gap:10px; font-size:19px; font-weight:700;}
+  .logo .dot{width:9px; height:9px; border-radius:50%; background:var(--amber); box-shadow:0 0 10px var(--amber);}
+  .nav-links{display:flex; gap:32px; font-size:14px; color:var(--muted);}
+  .nav-links a{text-decoration:none; transition:color .15s;}
+  .nav-links a:hover{color:var(--text);}
+  .nav-cta{
+    font-family:'JetBrains Mono', monospace; font-size:13px;
+    background:var(--amber); color:#141110; padding:9px 16px; border-radius:6px;
+    text-decoration:none; font-weight:500;
+  }
+  @media (max-width:760px){ .nav-links{display:none;} }
+
+  /* HERO */
+  .hero{position:relative; z-index:1; padding:88px 0 60px;}
+  .hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center;}
+  @media (max-width:900px){ .hero-grid{grid-template-columns:1fr; gap:48px;} }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace; font-size:12.5px; color:var(--cyan);
+    border:1px solid rgba(79,209,197,0.35); background:rgba(79,209,197,0.06);
+    padding:6px 12px; border-radius:20px; margin-bottom:22px;
+  }
+  .eyebrow::before{content:"●"; font-size:8px; color:var(--cyan);}
+
+  .hero h1{
+    font-size:clamp(34px, 5vw, 54px);
+    line-height:1.08;
+    margin-bottom:20px;
+  }
+  .hero h1 .accent{color:var(--amber);}
+  .hero p.lede{
+    font-size:17px; color:var(--muted); max-width:480px; margin-bottom:32px;
+  }
+
+  .waitlist{
+    display:flex; gap:10px; max-width:460px; margin-bottom:14px;
+  }
+  .waitlist input{
+    flex:1; background:var(--panel); border:1px solid var(--line); color:var(--text);
+    padding:13px 16px; border-radius:7px; font-size:14.5px; font-family:'Inter', sans-serif;
+    outline:none; transition:border-color .15s;
+  }
+  .waitlist input:focus{border-color:var(--cyan);}
+  .waitlist button{
+    background:var(--amber); color:#141110; border:none; padding:13px 20px; border-radius:7px;
+    font-weight:600; font-size:14.5px; cursor:pointer; white-space:nowrap; transition:filter .15s, transform .15s;
+  }
+  .waitlist button:hover{filter:brightness(1.08); transform:translateY(-1px);}
+  @media (max-width:480px){ .waitlist{flex-direction:column;} }
+
+  .form-note{font-size:12.5px; color:var(--muted); font-family:'JetBrains Mono', monospace;}
+  .form-success{
+    display:none; align-items:center; gap:8px; color:var(--cyan);
+    font-family:'JetBrains Mono', monospace; font-size:13.5px; margin-top:10px;
+  }
+  .form-success.show{display:flex;}
+
+  .track-chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:30px;}
+  .chip{
+    font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--muted);
+    border:1px solid var(--line); padding:6px 11px; border-radius:5px;
+  }
+
+  /* SIGNATURE: route diagram */
+  .route-panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:26px 22px 22px; position:relative; overflow:hidden;
+  }
+  .route-panel .panel-head{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--muted);
+    margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--line);
+  }
+  .route-panel .panel-head .live{color:var(--cyan);}
+  svg#routeSvg{width:100%; height:auto; display:block;}
+  .node-label{font-family:'JetBrains Mono', monospace; font-size:11.5px; fill:var(--muted);}
+  .node-label.active{fill:var(--text); font-weight:500;}
+  .hop-tag{font-family:'JetBrains Mono', monospace; font-size:9.5px; fill:var(--amber);}
+
+  /* SECTION shared */
+  section{position:relative; z-index:1; padding:80px 0;}
+  .section-head{max-width:600px; margin-bottom:48px;}
+  .section-head .eyebrow{margin-bottom:16px;}
+  .section-head h2{font-size:clamp(26px,3.4vw,36px); margin-bottom:14px;}
+  .section-head p{color:var(--muted); font-size:15.5px;}
+
+  /* TRACKS */
+  .tracks-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:14px;}
+  @media (max-width:980px){ .tracks-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:520px){ .tracks-grid{grid-template-columns:1fr;} }
+  .track-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:22px 18px; transition:border-color .2s, transform .2s;
+  }
+  .track-card:hover{border-color:var(--cyan); transform:translateY(-3px);}
+  .track-card .idx{font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--amber); margin-bottom:14px; display:block;}
+  .track-card h3{font-size:16px; margin-bottom:8px;}
+  .track-card p{font-size:13px; color:var(--muted); line-height:1.55;}
+
+  /* ROUTE / HOW IT WORKS */
+  .hops{border-left:1px solid var(--line); margin-left:9px;}
+  .hop{position:relative; padding:0 0 40px 32px;}
+  .hop:last-child{padding-bottom:0;}
+  .hop::before{
+    content:""; position:absolute; left:-6px; top:2px; width:11px; height:11px;
+    border-radius:50%; background:var(--bg); border:2px solid var(--amber);
+  }
+  .hop .hop-num{font-family:'JetBrains Mono', monospace; font-size:11.5px; color:var(--amber); margin-bottom:6px; display:block;}
+  .hop h3{font-size:18px; margin-bottom:8px;}
+  .hop p{color:var(--muted); font-size:14.5px; max-width:560px;}
+
+  /* WHY */
+  .why-grid{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+  @media (max-width:700px){ .why-grid{grid-template-columns:1fr;} }
+  .why-col{background:var(--panel-2); padding:32px;}
+  .why-col h3{font-size:14px; font-family:'JetBrains Mono', monospace; color:var(--muted); margin-bottom:18px; text-transform:uppercase; letter-spacing:.04em;}
+  .why-col.highlight h3{color:var(--cyan);}
+  .why-list{list-style:none;}
+  .why-list li{padding:9px 0; border-top:1px solid var(--line); font-size:14.5px; color:var(--muted); display:flex; gap:10px;}
+  .why-list li:first-child{border-top:none;}
+  .why-col.highlight .why-list li{color:var(--text);}
+  .why-list li .mark{font-family:'JetBrains Mono', monospace; flex-shrink:0;}
+  .why-col:not(.highlight) .mark{color:var(--danger);}
+  .why-col.highlight .mark{color:var(--cyan);}
+
+  /* FINAL CTA */
+  .cta-panel{
+    background:linear-gradient(180deg, var(--panel), var(--panel-2));
+    border:1px solid var(--line); border-radius:16px; padding:56px 40px; text-align:center;
+  }
+  .cta-panel h2{font-size:clamp(24px,3.2vw,32px); margin-bottom:14px;}
+  .cta-panel p{color:var(--muted); margin-bottom:30px; font-size:15.5px;}
+  .cta-panel .waitlist{margin:0 auto 12px; }
+  .cta-panel .form-note{display:block; text-align:center;}
+  .cta-panel .form-success{justify-content:center;}
+
+  footer{border-top:1px solid var(--line); padding:32px 0; position:relative; z-index:1;}
+  .footer-row{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
+  .footer-row .logo{font-size:15px;}
+  footer .fine{font-size:12.5px; color:var(--muted); font-family:'JetBrains Mono', monospace;}
+
+  @media (prefers-reduced-motion: reduce){
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <div class="logo"><span class="dot"></span>sayvak</div>
+      <div class="nav-links">
+        <a href="#tracks">Tracks</a>
+        <a href="#how">How it works</a>
+        <a href="#why">Why Sayvak</a>
+      </div>
+      <a href="#join" class="nav-cta">Join waitlist</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Now building &middot; GCC first</div>
+        <h1>Your resume,<br>routed by <span class="accent">people who've<br>done the job.</span></h1>
+        <p class="lede">Sayvak builds resumes and career routes for IT Support, Network, Security, Cyber Security and Information Security professionals — written in the language hiring managers in this field actually screen for.</p>
+
+        <form class="waitlist" id="waitlistForm">
+          <input type="email" id="emailInput" placeholder="you@company.com" required aria-label="Email address">
+          <button type="submit">Join waitlist</button>
+        </form>
+        <div class="form-note" id="formNote">No spam. One email when we open access.</div>
+        <div class="form-success" id="formSuccess">&#10003; You're on the list &mdash; we'll route you an invite soon.</div>
+
+        <div class="track-chips">
+          <span class="chip">Support</span>
+          <span class="chip">Network</span>
+          <span class="chip">Security</span>
+          <span class="chip">Cyber Security</span>
+          <span class="chip">Information Security</span>
+        </div>
+      </div>
+
+      <div class="route-panel">
+        <div class="panel-head">
+          <span>career_route.trace</span>
+          <span class="live">&#9679; live</span>
+        </div>
+        <svg id="routeSvg" viewBox="0 0 460 360" xmlns="http://www.w3.org/2000/svg">
+          <!-- connecting path -->
+          <path d="M 60 40 L 60 120 L 230 120 L 230 200 L 400 200 L 400 280 L 230 280 L 230 320"
+                fill="none" stroke="#1E2833" stroke-width="2"/>
+          <path id="animPath" d="M 60 40 L 60 120 L 230 120 L 230 200 L 400 200 L 400 280 L 230 280 L 230 320"
+                fill="none" stroke="#FFB454" stroke-width="2" stroke-dasharray="6 8" opacity="0.55"/>
+
+          <!-- traveling packet -->
+          <circle r="5" fill="#4FD1C5">
+            <animateMotion dur="7s" repeatCount="indefinite"
+              path="M 60 40 L 60 120 L 230 120 L 230 200 L 400 200 L 400 280 L 230 280 L 230 320"/>
+          </circle>
+
+          <!-- nodes -->
+          <g>
+            <circle cx="60" cy="40" r="7" fill="#0B0F14" stroke="#8A97A6" stroke-width="2"/>
+            <text x="76" y="45" class="node-label">Support</text>
+            <text x="76" y="60" class="hop-tag">hop 1</text>
+          </g>
+          <g>
+            <circle cx="60" cy="120" r="7" fill="#0B0F14" stroke="#8A97A6" stroke-width="2"/>
+            <text x="76" y="125" class="node-label">Network</text>
+            <text x="76" y="140" class="hop-tag">hop 2</text>
+          </g>
+          <g>
+            <circle cx="230" cy="120" r="7" fill="#0B0F14" stroke="#8A97A6" stroke-width="2"/>
+            <text x="246" y="115" class="node-label">Security</text>
+            <text x="246" y="140" class="hop-tag">hop 3</text>
+          </g>
+          <g>
+            <circle cx="230" cy="200" r="7.5" fill="#0B0F14" stroke="#FFB454" stroke-width="2.5"/>
+            <text x="246" y="195" class="node-label active">Cyber Security</text>
+            <text x="246" y="220" class="hop-tag">hop 4</text>
+          </g>
+          <g>
+            <circle cx="400" cy="200" r="7" fill="#0B0F14" stroke="#8A97A6" stroke-width="2"/>
+            <text x="320" y="192" class="node-label" text-anchor="end">Info Security</text>
+            <text x="320" y="207" class="hop-tag" text-anchor="end">hop 5</text>
+          </g>
+          <g>
+            <circle cx="400" cy="280" r="7" fill="#0B0F14" stroke="#8A97A6" stroke-width="2"/>
+            <text x="416" y="285" class="node-label">Architect</text>
+            <text x="416" y="300" class="hop-tag">hop 6</text>
+          </g>
+          <g>
+            <circle cx="230" cy="280" r="7" fill="#0B0F14" stroke="#8A97A6" stroke-width="2"/>
+          </g>
+          <g>
+            <circle cx="230" cy="320" r="7.5" fill="#0B0F14" stroke="#4FD1C5" stroke-width="2.5"/>
+            <text x="246" y="315" class="node-label active">Target role</text>
+            <text x="246" y="330" class="hop-tag">destination</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="tracks">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Built for the track you're actually on</div>
+        <h2>Five tracks. One route each.</h2>
+        <p>Every resume, keyword bank and cert roadmap is written for the track you pick — not a generic template stretched to fit.</p>
+      </div>
+      <div class="tracks-grid">
+        <div class="track-card">
+          <span class="idx">01</span>
+          <h3>Support</h3>
+          <p>Ticket volume, SLAs and tooling framed the way service-desk managers actually read them.</p>
+        </div>
+        <div class="track-card">
+          <span class="idx">02</span>
+          <h3>Network</h3>
+          <p>Routing, switching and uptime experience mapped against CCNA/CCNP-level expectations.</p>
+        </div>
+        <div class="track-card">
+          <span class="idx">03</span>
+          <h3>Security</h3>
+          <p>SOC, IAM and endpoint work translated into language that clears ATS and analyst interviews.</p>
+        </div>
+        <div class="track-card">
+          <span class="idx">04</span>
+          <h3>Cyber Security</h3>
+          <p>Incident response and threat-hunting experience, matched to Security+/CEH/OSCP-level roles.</p>
+        </div>
+        <div class="track-card">
+          <span class="idx">05</span>
+          <h3>Information Security</h3>
+          <p>GRC, risk and framework work — NIST, ISO 27001, SABSA — positioned for architect-track roles.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">The route</div>
+        <h2>How a resume moves through Sayvak</h2>
+        <p>Six hops from blank page to an interview-ready profile — no step skipped.</p>
+      </div>
+      <div class="hops">
+        <div class="hop">
+          <span class="hop-num">hop 1 &middot; 0.0.0.0</span>
+          <h3>Pick your track</h3>
+          <p>Support, Network, Security, Cyber Security or Information Security — Sayvak loads the keyword bank and structure for that track only.</p>
+        </div>
+        <div class="hop">
+          <span class="hop-num">hop 2 &middot; 0.0.0.1</span>
+          <h3>Build the resume</h3>
+          <p>Answer guided prompts about your actual work; Sayvak turns it into track-specific, ATS-readable copy.</p>
+        </div>
+        <div class="hop">
+          <span class="hop-num">hop 3 &middot; 0.0.0.2</span>
+          <h3>Score it against a real job post</h3>
+          <p>Paste a job description and see exactly which keywords, certs and phrasing gaps are costing you the screen.</p>
+        </div>
+        <div class="hop">
+          <span class="hop-num">hop 4 &middot; 0.0.0.3</span>
+          <h3>Get your cert roadmap</h3>
+          <p>See the shortest certified path from where you are to where you're aiming — Security+, CISSP, CCNP and beyond.</p>
+        </div>
+        <div class="hop">
+          <span class="hop-num">hop 5 &middot; 0.0.0.4</span>
+          <h3>Run a mock interview</h3>
+          <p>Scenario-based questions for your track — incident walkthroughs, troubleshooting, GRC judgment calls — not generic behavioral prompts.</p>
+        </div>
+        <div class="hop">
+          <span class="hop-num">hop 6 &middot; destination</span>
+          <h3>Apply with a profile that routes correctly</h3>
+          <p>A resume, keyword match and interview prep built for the exact role you're routing toward.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Why not a generic builder</div>
+        <h2>Generic tools don't know a SOC from a NOC.</h2>
+        <p>Most resume builders are built for every job at once, which means built for none of them well.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-col">
+          <h3>Generic resume builders</h3>
+          <ul class="why-list">
+            <li><span class="mark">&times;</span> One template stretched across every industry</li>
+            <li><span class="mark">&times;</span> Keyword suggestions with no domain context</li>
+            <li><span class="mark">&times;</span> No sense of cert progression or role ladders</li>
+            <li><span class="mark">&times;</span> Interview prep is generic behavioral questions</li>
+          </ul>
+        </div>
+        <div class="why-col highlight">
+          <h3>Sayvak</h3>
+          <ul class="why-list">
+            <li><span class="mark">&#10003;</span> Structure and copy tuned per IT/security track</li>
+            <li><span class="mark">&#10003;</span> Keyword bank built from real SOC/NOC/GRC job posts</li>
+            <li><span class="mark">&#10003;</span> Cert roadmap tied to your actual next role</li>
+            <li><span class="mark">&#10003;</span> Scenario-based mock interviews per track</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="join">
+    <div class="wrap">
+      <div class="cta-panel">
+        <h2>Be first through the route.</h2>
+        <p>Join the waitlist and we'll send an invite as soon as your track opens.</p>
+        <form class="waitlist" id="waitlistForm2">
+          <input type="email" id="emailInput2" placeholder="you@company.com" required aria-label="Email address">
+          <button type="submit">Join waitlist</button>
+        </form>
+        <span class="form-note">No spam. One email when we open access.</span>
+        <div class="form-success" id="formSuccess2">&#10003; You're on the list &mdash; we'll route you an invite soon.</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <div class="logo"><span class="dot"></span>sayvak</div>
+    <span class="fine">&copy; 2026 Sayvak. Career routes for IT & security professionals.</span>
+  </div>
+</footer>
+
+<script>
+  // Simple client-side waitlist capture.
+  // Replace this stub with a real endpoint (Formspree, Mailchimp, your own API) before going live.
+  function handleWaitlistSubmit(formId, inputId, successId) {
+    const form = document.getElementById(formId);
+    const input = document.getElementById(inputId);
+    const success = document.getElementById(successId);
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = input.value.trim();
+      if (!email) return;
+      // TODO: replace with a real POST to your waitlist backend/service.
+      console.log('waitlist signup:', email);
+      form.style.display = 'none';
+      success.classList.add('show');
+    });
+  }
+  handleWaitlistSubmit('waitlistForm', 'emailInput', 'formSuccess');
+  handleWaitlistSubmit('waitlistForm2', 'emailInput2', 'formSuccess2');
+</script>
+
+</body>
+</html>
